@@ -1,6 +1,7 @@
-package musicplatform;
+//package musicplatform;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -18,12 +19,17 @@ public class Main {
         while (loggedInUser == null) {
             System.out.println("1. Log in");
             System.out.println("2. Register");
+            System.out.println("3. Exit"); // Added exit option here
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1" -> logIn();
                 case "2" -> registerUser();
+                case "3" -> {
+                    System.out.println("Exiting the platform...");
+                    return; // Exit the program
+                }
                 default -> System.out.println("Invalid choice. Try again.");
             }
         }
@@ -66,9 +72,21 @@ public class Main {
         String username = scanner.nextLine();
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
-        System.out.print("Enter birth date (YYYY-MM-DD): ");
-        LocalDate birthDate = LocalDate.parse(scanner.nextLine());
 
+        LocalDate birthDate = null;
+        boolean validDate = false;
+
+        while (!validDate) {
+            System.out.print("Enter birth date (YYYY-MM-DD): ");
+            String dateInput = scanner.nextLine();
+            
+            try {
+                birthDate = LocalDate.parse(dateInput);
+                validDate = true;  // If parsing is successful, exit the loop
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please enter the date in YYYY-MM-DD format.");
+            }
+        }
         User newUser = new User(userId, password, username, email, birthDate, songBase);
         users.put(userId, newUser);
         System.out.println("Registration successful! You can now log in.");
@@ -106,7 +124,9 @@ public class Main {
                 System.out.println("7. Stop Song");
                 System.out.println("8. Like a Song");
                 System.out.println("9. See Current Song Info");
-                System.out.println("10. Log out");
+                System.out.println("10. View Liked Songs"); // View liked songs
+                System.out.println("11. Add Friend"); // New option to add friends
+                System.out.println("12. Log out");
                 System.out.println("EXIT - Close the program");
                 System.out.print("Enter your choice: ");
                 choice = scanner.nextLine().trim().toUpperCase();
@@ -121,7 +141,13 @@ public class Main {
                     case "7" -> loggedInUser.stopSong();
                     case "8" -> likeSong();
                     case "9" -> displayCurrentSongInfo();
-                    case "10" -> {
+                    case "10" -> loggedInUser.viewLikedSongs();  // View liked songs
+                    case "11" -> {
+                        System.out.print("Enter the user ID of the person you want to add as a friend: ");
+                        String userId = scanner.nextLine();  // Get the user ID from input
+                        addFriend(userId);  // Pass the userId to the addFriend method
+                    }
+                    case "12" -> {
                         loggedInUser = null;
                         System.out.println("Logged out successfully.");
                         return;
@@ -159,6 +185,20 @@ public class Main {
             default -> System.out.println("Invalid choice.");
         }
     }
+    
+    
+
+    public static void addFriend(String userId) {
+        User userToAdd = users.get(userId);  // Lookup the user by their ID
+    
+        if (userToAdd == null) {
+            System.out.println("User with ID '" + userId + "' not found.");
+            return;
+        }
+    
+        loggedInUser.addFriend(userToAdd);  
+    }
+    
     
 
     // Profile management
@@ -214,6 +254,8 @@ public class Main {
         System.out.println("\n=== Play Song ===");
         System.out.println("1. Search and Play Song");
         System.out.println("2. Search and Play from Playlist");
+        System.out.println("3. Choose Song from Library"); // New option
+        System.out.println("4. Like Current Song");  // Option to like the current song
         System.out.println("0. Back to Main Menu");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine().trim();
@@ -221,10 +263,49 @@ public class Main {
         switch (choice) {
             case "1" -> playSong();
             case "2" -> playFromPlaylist();
+            case "3" -> chooseSongFromLibrary(); // New method to choose song from library
+            case "4" -> likeCurrentSong(); // Like the current song
             case "0" -> mainMenu();
             default -> System.out.println("Invalid choice.");
         }
     }
+
+
+    private static void likeCurrentSong() {
+        Song currentSong = loggedInUser.getOnPlayingSong();  // Get the current song
+        if (currentSong != null) {
+            loggedInUser.likeSong(currentSong);  // Like the current song
+            System.out.println("You liked the song: " + currentSong.getName());
+        } else {
+            System.out.println("No song is currently playing.");
+        }
+    }
+    
+    private static void chooseSongFromLibrary() {
+        System.out.println("\n=== Available Songs ===");
+        int index = 1;
+        for (Song song : songBase.getAllSongs()) {  // Assuming songBase has access to all songs
+            System.out.println(index + ". " + song.getName() + " by " + song.getArtistName());
+            index++;
+        }
+    
+        System.out.print("Choose a song to play by number: ");
+        int songChoice = Integer.parseInt(scanner.nextLine().trim());
+    
+        if (songChoice > 0 && songChoice <= songBase.getAllSongs().size()) {
+            Song selectedSong = songBase.getAllSongs().get(songChoice - 1);
+            playSelectedSong(selectedSong);
+        } else {
+            System.out.println("Invalid choice. Try again.");
+        }
+    }
+    
+    private static void playSelectedSong(Song song) {
+        System.out.println("\nNow playing: " + song.getName() + " by " + song.getArtistName());
+        loggedInUser.playSong(song);
+        song.incrementPlayCount(); 
+    }
+    
 
 
     // Like a Song

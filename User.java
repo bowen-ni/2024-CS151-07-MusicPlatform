@@ -1,8 +1,10 @@
-package musicplatform;
+//package musicplatform;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class User {
     // Basic User Information
@@ -13,6 +15,11 @@ public class User {
     private LocalDate birthDate;
     private boolean isArtist;
     private boolean isSubscribed;
+    private Set<Song> likedSongs; 
+    private Set<User> friends; 
+    private static List<User> allUsers = new ArrayList<>();
+
+
 
     // Artist Profile (if applicable)
     private Artist artistProfile;
@@ -39,6 +46,10 @@ public class User {
         this.songBase = songBase;
         this.userPlaylists = new ArrayList<>();
         this.listeningHistory = new ArrayList<>();
+        this.likedSongs = new HashSet<>();
+        this.friends = new HashSet<>(); 
+
+        
     }
 
     public void viewProfile() {
@@ -131,7 +142,20 @@ public class User {
     // Like a Song
     public void likeSong(Song song) {
         song.rate(10); // Automatically gives it the highest rating
+        likedSongs.add(song); // Add to the liked songs list
         System.out.println(username + " liked the song: " + song.getName());
+    }
+
+    // View all liked songs
+    public void viewLikedSongs() {
+        if (likedSongs.isEmpty()) {
+            System.out.println("You have not liked any songs yet.");
+        } else {
+            System.out.println("Liked Songs:");
+            for (Song song : likedSongs) {
+                System.out.println(song.getName() + " by " + song.getArtistName());
+            }
+        }
     }
 
     // Create a New Playlist
@@ -206,6 +230,34 @@ public class User {
         }
     }
 
+        // New method to add a friend
+        public void addFriend(User user) {
+            if (!friends.contains(user)) {
+                friends.add(user);
+                System.out.println(user.getUsername() + " is now your friend.");
+            } else {
+                System.out.println(user.getUsername() + " is already your friend.");
+            }
+        }
+        
+
+    // Method to view the list of friends
+    public void viewFriends() {
+        if (friends.isEmpty()) {
+            System.out.println("You have no friends yet.");
+        } else {
+            System.out.println("Your friends:");
+            for (User friend : friends) {
+                System.out.println("- " + friend.getUsername());
+            }
+        }
+    }
+
+    // Getter for friends
+// Getter for friends
+public List<User> getFriends() {
+    return new ArrayList<>(friends);  // Convert Set<User> to List<User>
+}
 
     // Getter Methods
     public String getUserId() {

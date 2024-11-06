@@ -1,4 +1,4 @@
-package musicplatform;
+//package musicplatform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,12 @@ public class SongBase {
         this.allSongs = new ArrayList<>();
         this.allPlaylists = new ArrayList<>();
     }
+
+
+    public List<Song> getAllSongs() {
+        return allSongs;
+    }
+
 
     // Add a song to the database
     public void addSong(Song song) {
@@ -62,6 +68,7 @@ public class SongBase {
         }
     }
 
+    
     // Search for a playlist by name
     public Playlist searchPlaylist(String name) {
         for (Playlist playlist : allPlaylists) {

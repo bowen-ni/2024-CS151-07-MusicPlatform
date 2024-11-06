@@ -1,4 +1,4 @@
-package musicplatform;
+//package musicplatform;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -76,6 +76,11 @@ public class Song implements Playable, Rateable {
             System.out.println("Error: Duration must be a valid number.");
             return getValidDuration(); // Retry until valid input
         }
+    }
+
+    public void incrementPlayCount() {
+        this.playCount++;
+        System.out.println("Play count for '" + name + "' is now: " + playCount);
     }
     
     @Override

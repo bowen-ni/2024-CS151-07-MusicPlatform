@@ -1,4 +1,4 @@
-package musicplatform;
+//package musicplatform;
 
 public interface Rateable {
     // Rate the item with a score from 1 to 10
