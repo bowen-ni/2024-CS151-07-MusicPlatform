@@ -2,7 +2,9 @@
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class User {
     // Basic User Information
@@ -13,6 +15,8 @@ public class User {
     private LocalDate birthDate;
     private boolean isArtist;
     private boolean isSubscribed;
+    private Set<Song> likedSongs; // Store liked songs
+
 
     // Artist Profile (if applicable)
     private Artist artistProfile;
@@ -39,6 +43,8 @@ public class User {
         this.songBase = songBase;
         this.userPlaylists = new ArrayList<>();
         this.listeningHistory = new ArrayList<>();
+        this.likedSongs = new HashSet<>();
+
     }
 
     public void viewProfile() {
@@ -131,7 +137,20 @@ public class User {
     // Like a Song
     public void likeSong(Song song) {
         song.rate(10); // Automatically gives it the highest rating
+        likedSongs.add(song); // Add to the liked songs list
         System.out.println(username + " liked the song: " + song.getName());
+    }
+
+    // View all liked songs
+    public void viewLikedSongs() {
+        if (likedSongs.isEmpty()) {
+            System.out.println("You have not liked any songs yet.");
+        } else {
+            System.out.println("Liked Songs:");
+            for (Song song : likedSongs) {
+                System.out.println(song.getName() + " by " + song.getArtistName());
+            }
+        }
     }
 
     // Create a New Playlist

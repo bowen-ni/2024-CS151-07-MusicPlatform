@@ -124,7 +124,8 @@ public class Main {
                 System.out.println("7. Stop Song");
                 System.out.println("8. Like a Song");
                 System.out.println("9. See Current Song Info");
-                System.out.println("10. Log out");
+                System.out.println("10. View Liked Songs"); // View liked songs
+                System.out.println("11. Log out");
                 System.out.println("EXIT - Close the program");
                 System.out.print("Enter your choice: ");
                 choice = scanner.nextLine().trim().toUpperCase();
@@ -139,7 +140,8 @@ public class Main {
                     case "7" -> loggedInUser.stopSong();
                     case "8" -> likeSong();
                     case "9" -> displayCurrentSongInfo();
-                    case "10" -> {
+                    case "10" -> loggedInUser.viewLikedSongs();  // View liked songs
+                    case "11" -> {
                         loggedInUser = null;
                         System.out.println("Logged out successfully.");
                         return;
@@ -233,6 +235,7 @@ public class Main {
         System.out.println("1. Search and Play Song");
         System.out.println("2. Search and Play from Playlist");
         System.out.println("3. Choose Song from Library"); // New option
+        System.out.println("4. Like Current Song");  // Option to like the current song
         System.out.println("0. Back to Main Menu");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine().trim();
@@ -241,11 +244,23 @@ public class Main {
             case "1" -> playSong();
             case "2" -> playFromPlaylist();
             case "3" -> chooseSongFromLibrary(); // New method to choose song from library
+            case "4" -> likeCurrentSong(); // Like the current song
             case "0" -> mainMenu();
             default -> System.out.println("Invalid choice.");
         }
     }
 
+
+    private static void likeCurrentSong() {
+        Song currentSong = loggedInUser.getOnPlayingSong();  // Get the current song
+        if (currentSong != null) {
+            loggedInUser.likeSong(currentSong);  // Like the current song
+            System.out.println("You liked the song: " + currentSong.getName());
+        } else {
+            System.out.println("No song is currently playing.");
+        }
+    }
+    
     private static void chooseSongFromLibrary() {
         System.out.println("\n=== Available Songs ===");
         int index = 1;
@@ -267,8 +282,8 @@ public class Main {
     
     private static void playSelectedSong(Song song) {
         System.out.println("\nNow playing: " + song.getName() + " by " + song.getArtistName());
-        // Add your song-playing logic here (e.g., increment play count, play the song, etc.)
-        song.incrementPlayCount(); // Assuming you have a method to increment play count
+        loggedInUser.playSong(song);
+        song.incrementPlayCount(); 
     }
     
 
