@@ -77,6 +77,11 @@ public class Song implements Playable, Rateable {
             return getValidDuration(); // Retry until valid input
         }
     }
+
+    public void incrementPlayCount() {
+        this.playCount++;
+        System.out.println("Play count for '" + name + "' is now: " + playCount);
+    }
     
     @Override
     public double getAverageRating() {

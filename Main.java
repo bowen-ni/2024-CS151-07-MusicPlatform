@@ -232,6 +232,7 @@ public class Main {
         System.out.println("\n=== Play Song ===");
         System.out.println("1. Search and Play Song");
         System.out.println("2. Search and Play from Playlist");
+        System.out.println("3. Choose Song from Library"); // New option
         System.out.println("0. Back to Main Menu");
         System.out.print("Enter your choice: ");
         String choice = scanner.nextLine().trim();
@@ -239,10 +240,37 @@ public class Main {
         switch (choice) {
             case "1" -> playSong();
             case "2" -> playFromPlaylist();
+            case "3" -> chooseSongFromLibrary(); // New method to choose song from library
             case "0" -> mainMenu();
             default -> System.out.println("Invalid choice.");
         }
     }
+
+    private static void chooseSongFromLibrary() {
+        System.out.println("\n=== Available Songs ===");
+        int index = 1;
+        for (Song song : songBase.getAllSongs()) {  // Assuming songBase has access to all songs
+            System.out.println(index + ". " + song.getName() + " by " + song.getArtistName());
+            index++;
+        }
+    
+        System.out.print("Choose a song to play by number: ");
+        int songChoice = Integer.parseInt(scanner.nextLine().trim());
+    
+        if (songChoice > 0 && songChoice <= songBase.getAllSongs().size()) {
+            Song selectedSong = songBase.getAllSongs().get(songChoice - 1);
+            playSelectedSong(selectedSong);
+        } else {
+            System.out.println("Invalid choice. Try again.");
+        }
+    }
+    
+    private static void playSelectedSong(Song song) {
+        System.out.println("\nNow playing: " + song.getName() + " by " + song.getArtistName());
+        // Add your song-playing logic here (e.g., increment play count, play the song, etc.)
+        song.incrementPlayCount(); // Assuming you have a method to increment play count
+    }
+    
 
 
     // Like a Song

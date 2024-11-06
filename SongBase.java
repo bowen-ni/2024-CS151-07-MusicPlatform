@@ -12,6 +12,12 @@ public class SongBase {
         this.allPlaylists = new ArrayList<>();
     }
 
+
+    public List<Song> getAllSongs() {
+        return allSongs;
+    }
+
+
     // Add a song to the database
     public void addSong(Song song) {
         allSongs.add(song);
@@ -62,6 +68,7 @@ public class SongBase {
         }
     }
 
+    
     // Search for a playlist by name
     public Playlist searchPlaylist(String name) {
         for (Playlist playlist : allPlaylists) {
