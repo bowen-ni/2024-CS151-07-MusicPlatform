@@ -1,6 +1,7 @@
-package musicplatform;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -66,8 +67,22 @@ public class Main {
         String username = scanner.nextLine();
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
+        LocalDate birthDate = null;
+        while (birthDate == null) {
         System.out.print("Enter birth date (YYYY-MM-DD): ");
-        LocalDate birthDate = LocalDate.parse(scanner.nextLine());
+        String birthDateString = scanner.nextLine();
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            birthDate = LocalDate.parse(birthDateString, formatter);
+
+            if (birthDate.isAfter(LocalDate.now())) {
+                System.out.println("Birthdate cannot be in the future. Please enter a valid date.");
+                birthDate = null;  // Reset and prompt again
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format. Please use the correct format (YYYY-MM-DD).");
+        }
+    }
 
         User newUser = new User(userId, password, username, email, birthDate, songBase);
         users.put(userId, newUser);

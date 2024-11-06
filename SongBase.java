@@ -1,34 +1,40 @@
-package musicplatform;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SongBase {
-    private List<Song> allSongs;
-    private List<Playlist> allPlaylists;
+    private Map<String, Song> songMap;
+    private Map<String, Playlist> playlistMap;
 
     public SongBase() {
-        this.allSongs = new ArrayList<>();
-        this.allPlaylists = new ArrayList<>();
+        songMap = new HashMap<>();
+        playlistMap = new HashMap<>();
     }
 
-    // Add a song to the database
     public void addSong(Song song) {
-        allSongs.add(song);
+        songMap.put(song.getName().toLowerCase(), song); // Add song to map
     }
 
-    // Add a playlist to the database
     public void addPlaylist(Playlist playlist) {
-        allPlaylists.add(playlist);
-
+        playlistMap.put(playlist.getName().toLowerCase(), playlist); // Add playlist to map
     }
 
-    // Removes the song if it exists
     public boolean removeSong(Song song) {
-        return allSongs.remove(song); 
+        return songMap.remove(song.getName().toLowerCase(), song); // Efficient removal using map
     }
 
-    // Search and display song details by name
+    public Song searchSong(String name) {
+        return songMap.get(name.toLowerCase()); // Optimized search using map
+    }
+
+    public Playlist searchPlaylist(String name) {
+        return playlistMap.get(name.toLowerCase()); // Optimized search using map
+    }
+
+    // Search and display song details by name (using the optimized search)
     public void searchSongByName(String name) {
         Song song = searchSong(name);
         if (song != null) {
@@ -40,17 +46,7 @@ public class SongBase {
         }
     }
 
-    // Search for a song by name
-    public Song searchSong(String name) {
-        for (Song song : allSongs) {
-            if (song.getName().equalsIgnoreCase(name.trim())) {
-                return song;
-            }
-        }
-        return null;
-    }
-
-    // Search and display playlist details by name
+    // Search and display playlist details by name (using the optimized search)
     public void searchPlaylistByName(String name) {
         Playlist playlist = searchPlaylist(name);
         if (playlist != null) {
@@ -60,15 +56,5 @@ public class SongBase {
         } else {
             System.out.println("Playlist not found.");
         }
-    }
-
-    // Search for a playlist by name
-    public Playlist searchPlaylist(String name) {
-        for (Playlist playlist : allPlaylists) {
-            if (playlist.getName().equalsIgnoreCase(name.trim())) {
-                return playlist;
-            }
-        }
-        return null;
     }
 }

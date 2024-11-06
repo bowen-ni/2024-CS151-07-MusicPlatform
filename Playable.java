@@ -1,4 +1,3 @@
-package musicplatform;
 
 public interface Playable {
     // Play the item (song or playlist)
