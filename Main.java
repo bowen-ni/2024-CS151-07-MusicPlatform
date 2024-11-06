@@ -1,6 +1,7 @@
-package musicplatform;
+//package musicplatform;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -18,12 +19,17 @@ public class Main {
         while (loggedInUser == null) {
             System.out.println("1. Log in");
             System.out.println("2. Register");
+            System.out.println("3. Exit"); // Added exit option here
             System.out.print("Choose an option: ");
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1" -> logIn();
                 case "2" -> registerUser();
+                case "3" -> {
+                    System.out.println("Exiting the platform...");
+                    return; // Exit the program
+                }
                 default -> System.out.println("Invalid choice. Try again.");
             }
         }
@@ -66,9 +72,21 @@ public class Main {
         String username = scanner.nextLine();
         System.out.print("Enter email: ");
         String email = scanner.nextLine();
-        System.out.print("Enter birth date (YYYY-MM-DD): ");
-        LocalDate birthDate = LocalDate.parse(scanner.nextLine());
 
+        LocalDate birthDate = null;
+        boolean validDate = false;
+
+        while (!validDate) {
+            System.out.print("Enter birth date (YYYY-MM-DD): ");
+            String dateInput = scanner.nextLine();
+            
+            try {
+                birthDate = LocalDate.parse(dateInput);
+                validDate = true;  // If parsing is successful, exit the loop
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please enter the date in YYYY-MM-DD format.");
+            }
+        }
         User newUser = new User(userId, password, username, email, birthDate, songBase);
         users.put(userId, newUser);
         System.out.println("Registration successful! You can now log in.");

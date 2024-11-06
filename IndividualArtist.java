@@ -1,4 +1,4 @@
-package musicplatform;
+//package musicplatform;
 
 public class IndividualArtist extends Artist {
     private String bio; // Artist bio or description
