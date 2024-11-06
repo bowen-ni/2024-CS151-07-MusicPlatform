@@ -15,7 +15,10 @@ public class User {
     private LocalDate birthDate;
     private boolean isArtist;
     private boolean isSubscribed;
-    private Set<Song> likedSongs; // Store liked songs
+    private Set<Song> likedSongs; 
+    private Set<User> friends; 
+    private static List<User> allUsers = new ArrayList<>();
+
 
 
     // Artist Profile (if applicable)
@@ -44,7 +47,9 @@ public class User {
         this.userPlaylists = new ArrayList<>();
         this.listeningHistory = new ArrayList<>();
         this.likedSongs = new HashSet<>();
+        this.friends = new HashSet<>(); 
 
+        
     }
 
     public void viewProfile() {
@@ -225,6 +230,34 @@ public class User {
         }
     }
 
+        // New method to add a friend
+        public void addFriend(User user) {
+            if (!friends.contains(user)) {
+                friends.add(user);
+                System.out.println(user.getUsername() + " is now your friend.");
+            } else {
+                System.out.println(user.getUsername() + " is already your friend.");
+            }
+        }
+        
+
+    // Method to view the list of friends
+    public void viewFriends() {
+        if (friends.isEmpty()) {
+            System.out.println("You have no friends yet.");
+        } else {
+            System.out.println("Your friends:");
+            for (User friend : friends) {
+                System.out.println("- " + friend.getUsername());
+            }
+        }
+    }
+
+    // Getter for friends
+// Getter for friends
+public List<User> getFriends() {
+    return new ArrayList<>(friends);  // Convert Set<User> to List<User>
+}
 
     // Getter Methods
     public String getUserId() {

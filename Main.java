@@ -125,7 +125,8 @@ public class Main {
                 System.out.println("8. Like a Song");
                 System.out.println("9. See Current Song Info");
                 System.out.println("10. View Liked Songs"); // View liked songs
-                System.out.println("11. Log out");
+                System.out.println("11. Add Friend"); // New option to add friends
+                System.out.println("12. Log out");
                 System.out.println("EXIT - Close the program");
                 System.out.print("Enter your choice: ");
                 choice = scanner.nextLine().trim().toUpperCase();
@@ -142,6 +143,11 @@ public class Main {
                     case "9" -> displayCurrentSongInfo();
                     case "10" -> loggedInUser.viewLikedSongs();  // View liked songs
                     case "11" -> {
+                        System.out.print("Enter the user ID of the person you want to add as a friend: ");
+                        String userId = scanner.nextLine();  // Get the user ID from input
+                        addFriend(userId);  // Pass the userId to the addFriend method
+                    }
+                    case "12" -> {
                         loggedInUser = null;
                         System.out.println("Logged out successfully.");
                         return;
@@ -179,6 +185,20 @@ public class Main {
             default -> System.out.println("Invalid choice.");
         }
     }
+    
+    
+
+    public static void addFriend(String userId) {
+        User userToAdd = users.get(userId);  // Lookup the user by their ID
+    
+        if (userToAdd == null) {
+            System.out.println("User with ID '" + userId + "' not found.");
+            return;
+        }
+    
+        loggedInUser.addFriend(userToAdd);  
+    }
+    
     
 
     // Profile management
